@@ -1,0 +1,5 @@
+requests
+Pillow
+playwright
+opencv-python
+numpy

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[상품명] 상세페이지</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  /* 공급처 이미지의 로고·중국어 영역은 CSS 크롭(background-size/position)으로 잘라낸다 */
+  :root{
+    --ink:#17181a;
+    --paper:#f7f5f1;
+    --line:#e2ded6;
+    --line-dark:#c9c3b8;
+    --muted:#71716c;
+    --accent:#5f6f52;      /* 포인트 색 — 상품 색에 맞춰 바꾼다 */
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    color:var(--ink);background:#fff;line-height:1.7;
+    -webkit-font-smoothing:antialiased;word-break:keep-all;
+  }
+  .page{max-width:860px;margin:0 auto;overflow:hidden}
+  section{padding:80px 44px}
+  img{display:block;max-width:100%}
+  .crop{background-repeat:no-repeat;overflow:hidden}
+  .num{font-variant-numeric:tabular-nums}
+
+  .rhead{display:flex;align-items:baseline;gap:14px;border-top:1px solid var(--ink);padding-top:14px;margin-bottom:34px}
+  .rhead .no{font-size:13px;font-weight:700;letter-spacing:.08em;color:var(--accent)}
+  .rhead .lb{font-size:13px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+
+  h2{font-size:32px;font-weight:800;letter-spacing:-.03em;line-height:1.25;text-wrap:balance}
+  .lead{font-size:16px;color:var(--muted);max-width:34em}
+
+  /* HERO — 큰 연출컷 위에 헤드라인. 로고·문구는 background-size/position 확대 크롭으로 피한다 */
+  .hero{position:relative;color:#fff;padding:0}
+  .hero .bg{width:100%;aspect-ratio:860/1100;background:url('../히어로.jpg') no-repeat;background-size:115% auto;background-position:58% 25%}
+  .hero .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,14,16,.35) 0%,rgba(14,14,16,.05) 32%,rgba(14,14,16,.55) 68%,rgba(14,14,16,.92) 100%)}
+  .hero .inner{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;padding:56px 44px}
+  .hero .kicker{font-size:12.5px;letter-spacing:.30em;color:#cfd8c2;font-weight:600}
+  .hero h1{font-size:46px;font-weight:800;letter-spacing:-.035em;line-height:1.16;margin:14px 0 12px;text-shadow:0 3px 22px rgba(0,0,0,.55);text-wrap:balance}
+  .hero .sub{font-size:17px;color:#e8e6df;font-weight:400;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+  .hero .specline{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:26px;border-top:1px solid rgba(255,255,255,.35);width:100%}
+  .hero .specline div{padding-top:14px;font-size:13.5px;color:#e4e2da;text-shadow:0 1px 8px rgba(0,0,0,.7)}
+  .hero .specline b{display:block;font-size:17px;color:#fff;font-weight:700;letter-spacing:-.01em}
+
+  /* SPEC STRIP */
+  .strip{background:var(--paper);padding-top:64px;padding-bottom:64px}
+  .strip h2{margin-bottom:8px}
+  .strip .sub{font-size:15.5px;color:var(--muted);margin-bottom:40px}
+  .strip .row{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:36px}
+  .strip .cell{border-top:1px solid var(--line-dark);padding-top:18px}
+  .strip .cell .v{font-size:40px;font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:10px;height:40px;display:flex;align-items:flex-end}
+  .strip .cell .v.txt{font-size:34px}
+  .strip .cell .v small{font-size:17px;font-weight:700;letter-spacing:0;margin-left:2px}
+  .strip .cell .k{font-size:15px;font-weight:700;margin-bottom:4px}
+  .strip .cell p{font-size:13.5px;color:var(--muted);line-height:1.6}
+
+  /* FABRIC */
+  .fabric .split{display:grid;grid-template-columns:7fr 5fr;gap:40px;align-items:end}
+  .fabric .shot{width:100%;aspect-ratio:4/5}
+  .fabric .tx h2{margin-bottom:16px}
+  .fabric .tx p{font-size:15px;color:var(--muted);margin-bottom:14px}
+  .fabric .tx .fine{font-size:12.5px;color:#9a978f;border-top:1px solid var(--line);padding-top:12px;margin-top:22px}
+  .fabric .band{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:36px}
+  .fabric .band div{border:1px solid var(--line-dark);border-radius:10px;padding:18px 12px;font-size:13.5px;color:var(--muted);text-align:center}
+  .fabric .band b{display:block;font-size:20px;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+
+  /* DETAILS */
+  .feat{background:var(--paper)}
+  .feat .row{display:flex;gap:40px;align-items:center;position:relative}
+  .feat .row+.row{margin-top:64px}
+  .feat .row.rev{flex-direction:row-reverse}
+  .feat .ph{flex:0 0 340px}
+  .feat .ph .crop{aspect-ratio:1/1;background-color:#fff}
+  .feat .tx{flex:1;position:relative}
+  .feat .ghost{font-size:88px;font-weight:800;letter-spacing:-.05em;line-height:1;color:transparent;-webkit-text-stroke:1px var(--line-dark);margin-bottom:2px}
+  .feat .tx h3{font-size:21px;font-weight:800;letter-spacing:-.02em;margin:4px 0 10px}
+  .feat .tx p{font-size:15px;color:var(--muted);max-width:26em}
+
+  /* MOTION — 사용 장면 */
+  .motion{text-align:left}
+  .motion .shot{width:100%;aspect-ratio:5/4;margin-top:34px}
+  .motion .cap{font-size:13px;color:var(--muted);margin-top:14px;text-align:right}
+
+  /* STYLE — 착용컷 2×2 */
+  .stylegrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:36px}
+  .stylegrid .crop{aspect-ratio:3/4}
+  .style .cap2{font-size:13px;color:var(--muted);margin-top:16px;text-align:right}
+
+  /* COLOR — 컬러 플랫 2×2 */
+  .color{background:var(--paper)}
+  .color .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:36px}
+  .color .grid .crop{aspect-ratio:1/1;background-size:cover;background-position:center}
+  .color .list{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+  .color .list span{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line-dark);border-radius:999px;padding:9px 20px;font-size:14px;font-weight:600}
+  .color .list i{width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.18)}
+
+  /* SIZE */
+  .size table{width:100%;border-collapse:collapse;font-size:15px;table-layout:fixed;margin-top:34px}
+  .size th{border-bottom:2px solid var(--ink);padding:12px 6px;font-weight:700;text-align:center;font-size:14px}
+  .size td{border-bottom:1px solid var(--line);padding:13px 6px;text-align:center}
+  .size td:first-child{font-weight:700}
+  .size .cap{font-size:13px;color:var(--muted);margin-top:16px}
+
+  /* NOTICE */
+  .notice{background:var(--paper)}
+  .notice dl{margin-top:6px}
+  .notice .item{display:grid;grid-template-columns:150px 1fr;gap:24px;padding:18px 0;border-bottom:1px solid var(--line)}
+  .notice .item:first-child{border-top:1px solid var(--ink)}
+  .notice dt{font-size:14.5px;font-weight:700}
+  .notice dd{font-size:14.5px;color:var(--muted)}
+
+  @media(max-width:680px){
+    section{padding:56px 24px}
+    .hero .inner{padding:40px 24px}
+    .hero h1{font-size:33px}
+    h2{font-size:26px}
+    .feat .row,.feat .row.rev{flex-direction:column;gap:22px;align-items:flex-start}
+    .feat .ph{flex-basis:auto;width:100%}
+    .fabric .split{grid-template-columns:1fr;gap:26px}
+    .notice .item{grid-template-columns:104px 1fr;gap:14px}
+  }
+  @media(max-width:480px){
+    section{padding:48px 18px}
+    .hero .inner{padding:32px 18px}
+    .hero h1{font-size:27px}
+    .hero .sub{font-size:14.5px}
+    .hero .specline{gap:10px}
+    .hero .specline div{font-size:12.5px}
+    .hero .specline b{font-size:15px}
+    h2{font-size:22px}
+    .lead{font-size:14.5px}
+    .strip .row{gap:14px}
+    .strip .cell .v{font-size:26px;height:26px}
+    .strip .cell .v.txt{font-size:21px}
+    .strip .cell .v small{font-size:13px}
+    .strip .cell .k{font-size:12.5px}
+    .strip .cell p{font-size:10.5px}
+    .fabric .band{gap:8px}
+    .fabric .band b{font-size:14px}
+    .fabric .band div{font-size:10.5px;padding:13px 6px;border-radius:8px}
+    .feat .ghost{font-size:56px}
+    .feat .tx h3{font-size:17px}
+    .feat .tx p{font-size:13.5px}
+    .color .grid{gap:8px}
+    .color .list{gap:9px}
+    .color .list span{width:47%;justify-content:center;font-size:13.5px;gap:7px;padding:11px 0}
+    .color .list i{width:14px;height:14px}
+    .size table{font-size:12px}
+    .size th{font-size:11.5px;padding:9px 3px}
+    .size td{padding:10px 3px}
+    .notice .item{grid-template-columns:86px 1fr;padding:13px 0}
+    .notice dt,.notice dd{font-size:12.5px}
+  }
+</style>
+</head>
+<body>
+<!--
+  상세페이지 템플릿
+  - 이 파일은 <상품폴더>/output/ 안에 두고, 공급처 이미지는 <상품폴더>/ 에 둔다 → 이미지 경로는 '../파일명.jpg'
+  - 섹션은 반드시 .page 바로 아래 <section> 으로 둔다. html_to_images.py 가 이 경계에서 이미지를 자른다
+  - 상품에 맞지 않는 섹션은 통째로 지운다. 지우면 rhead 번호(01, 02 …)를 다시 매긴다
+  - [대괄호] 안은 전부 바꿀 자리다
+-->
+<div class="page">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="bg"></div>
+    <div class="veil"></div>
+    <div class="inner">
+      <div class="kicker">[ENGLISH PRODUCT NAME]</div>
+      <h1>[헤드라인 1행]<br>[헤드라인 2행]</h1>
+      <p class="sub">[서브카피 — 무엇인지 한 줄]</p>
+      <div class="specline num">
+        <div><b>[핵심 특징 1]</b>[짧은 설명]</div>
+        <div><b>[핵심 특징 2]</b>[짧은 설명]</div>
+        <div><b>[S – XL]</b>[남녀 공용 N색]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPEC STRIP -->
+  <section class="strip">
+    <div class="rhead"><span class="no">01</span><span class="lb">[Key Points]</span></div>
+    <h2>[스펙 섹션 제목]</h2>
+    <p class="sub">[리드문 1~2문장]</p>
+    <div class="row">
+      <div class="cell num">
+        <div class="v txt">[특징어]</div>
+        <div class="k">[라벨]</div>
+        <p>[한 줄 설명]</p>
+      </div>
+      <div class="cell num">
+        <div class="v txt">[특징어]</div>
+        <div class="k">[라벨]</div>
+        <p>[한 줄 설명]</p>
+      </div>
+      <div class="cell num">
+        <div class="v">[000]<small>g</small></div>
+        <div class="k">[무게를 몸으로 옮긴 말]</div>
+        <p>[한 줄 설명]</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FABRIC -->
+  <section class="fabric">
+    <div class="rhead"><span class="no">02</span><span class="lb">Fabric</span></div>
+    <div class="split">
+      <div class="shot crop" style="background-image:url('../원단.jpg');background-size:cover;background-position:center"></div>
+      <div class="tx">
+        <h2>[원단 섹션 제목]</h2>
+        <p>[원단 설명 1]</p>
+        <p>[원단 설명 2]</p>
+        <p class="fine">[각주 — 소재 기술 브랜드 표기 등, 없으면 이 줄 삭제]</p>
+      </div>
+    </div>
+    <div class="band num">
+      <div><b>[소재 구성]</b>겉감 소재</div>
+      <div><b>[000 g/m²]</b>원단 중량</div>
+      <div><b>[인증·특징]</b>[설명]</div>
+    </div>
+  </section>
+
+  <!-- DETAILS -->
+  <section class="feat">
+    <div class="rhead"><span class="no">03</span><span class="lb">Details</span></div>
+
+    <div class="row">
+      <div class="ph">
+        <div class="crop" style="background-image:url('../디테일1.jpg');background-size:cover;background-position:center 30%"></div>
+      </div>
+      <div class="tx">
+        <div class="ghost num">01</div>
+        <h3>[디테일 1 소제목]</h3>
+        <p>[디테일 1 설명]</p>
+      </div>
+    </div>
+
+    <div class="row rev">
+      <div class="ph">
+        <div class="crop" style="background-image:url('../디테일2.jpg');background-size:cover;background-position:center"></div>
+      </div>
+      <div class="tx">
+        <div class="ghost num">02</div>
+        <h3>[디테일 2 소제목]</h3>
+        <p>[디테일 2 설명]</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="ph">
+        <div class="crop" style="background-image:url('../디테일3.jpg');background-size:cover;background-position:center"></div>
+      </div>
+      <div class="tx">
+        <div class="ghost num">03</div>
+        <h3>[디테일 3 소제목]</h3>
+        <p>[디테일 3 설명]</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOTION -->
+  <section class="motion">
+    <div class="rhead"><span class="no">04</span><span class="lb">In Use</span></div>
+    <h2>[사용 장면 제목]</h2>
+    <p class="lead">[사용 장면 리드문]</p>
+    <div class="shot crop" style="background-image:url('../사용장면.jpg');background-size:cover;background-position:center"></div>
+    <p class="cap">[캡션]</p>
+  </section>
+
+  <!-- STYLE -->
+  <section class="style" style="background:var(--paper)">
+    <div class="rhead"><span class="no">05</span><span class="lb">Styling</span></div>
+    <h2>[스타일링 제목]</h2>
+    <p class="lead">[스타일링 리드문]</p>
+    <div class="stylegrid">
+      <div class="crop" style="background-image:url('../착용1.jpg');background-size:cover;background-position:center 20%"></div>
+      <div class="crop" style="background-image:url('../착용2.jpg');background-size:cover;background-position:center 20%"></div>
+      <div class="crop" style="background-image:url('../착용3.jpg');background-size:cover;background-position:center 20%"></div>
+      <div class="crop" style="background-image:url('../착용4.jpg');background-size:cover;background-position:center 20%"></div>
+    </div>
+    <p class="cap2">일부 이미지는 연출 컷입니다</p>
+  </section>
+
+  <!-- COLOR -->
+  <section class="color">
+    <div class="rhead"><span class="no">06</span><span class="lb">Color</span></div>
+    <h2>[N가지 컬러]</h2>
+    <div class="grid">
+      <div class="crop" style="background-image:url('../컬러1.jpg')"></div>
+      <div class="crop" style="background-image:url('../컬러2.jpg')"></div>
+      <div class="crop" style="background-image:url('../컬러3.jpg')"></div>
+      <div class="crop" style="background-image:url('../컬러4.jpg')"></div>
+    </div>
+    <div class="list">
+      <span><i style="background:#eceae4"></i>[색상명 1]</span>
+      <span><i style="background:#9d94a5"></i>[색상명 2]</span>
+      <span><i style="background:#8a7d4f"></i>[색상명 3]</span>
+      <span><i style="background:#1e1e1e"></i>[색상명 4]</span>
+    </div>
+  </section>
+
+  <!-- SIZE -->
+  <section class="size">
+    <div class="rhead"><span class="no">07</span><span class="lb">Size Guide</span></div>
+    <h2>사이즈 안내</h2>
+    <p class="lead" style="margin-top:8px">[핏 안내 한 줄] (단위: cm)</p>
+    <table class="num">
+      <tr><th>사이즈</th><th>가슴둘레</th><th>총장</th><th>소매길이</th><th>추천 키</th><th>추천 몸무게</th></tr>
+      <tr><td>M</td><td>[ ]</td><td>[ ]</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+      <tr><td>L</td><td>[ ]</td><td>[ ]</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+      <tr><td>XL</td><td>[ ]</td><td>[ ]</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+    </table>
+    <p class="cap">평면 수작업 실측으로 1~3cm 오차가 있을 수 있으며, 추천 키·몸무게는 참고용입니다.</p>
+  </section>
+
+  <!-- NOTICE -->
+  <section class="notice">
+    <div class="rhead"><span class="no">08</span><span class="lb">Guide</span></div>
+    <h2 style="margin-bottom:30px">구매 전 안내</h2>
+    <dl>
+      <div class="item"><dt>소재</dt><dd>[소재 구성]</dd></div>
+      <div class="item"><dt>세탁</dt><dd>[세탁 방법]</dd></div>
+      <div class="item"><dt>배송</dt><dd>[배송 안내]</dd></div>
+      <div class="item"><dt>교환·반품</dt><dd>[교환·반품 조건]</dd></div>
+      <div class="item"><dt>색상</dt><dd>모니터 환경에 따라 실제 색상과 차이가 있을 수 있습니다.</dd></div>
+      <div class="item"><dt>이미지</dt><dd>일부 이미지는 연출 컷으로, 착용 소품은 구성품에 포함되지 않습니다. [AI 생성 이미지를 썼다면: AI로 생성한 연출 이미지가 포함되어 있습니다.]</dd></div>
+    </dl>
+  </section>
+
+</div>
+</body>
+</html>

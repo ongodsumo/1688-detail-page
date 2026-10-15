@@ -1,0 +1,14 @@
+{
+  "name": "onggatsumo",
+  "description": "온갖수모가 쓰는 1인 이커머스 Claude Code 플러그인 모음",
+  "owner": {
+    "name": "온갖수모"
+  },
+  "plugins": [
+    {
+      "name": "detail-page-1688",
+      "source": "./",
+      "description": "1688 링크로 스마트스토어 상세페이지·대표이미지 만들기"
+    }
+  ]
+}
