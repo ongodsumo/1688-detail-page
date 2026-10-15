@@ -18,10 +18,15 @@
 """
 
 import argparse
+import sys
 from pathlib import Path
 
 import cv2
 import numpy as np
+
+# 윈도우 한글 콘솔(cp949)에서 도움말·진행 메시지가 깨지거나 멈추지 않게 UTF-8로 출력한다
+sys.stdout.reconfigure(encoding="utf-8")
+sys.stderr.reconfigure(encoding="utf-8")
 
 MARGIN = 4  # 지울 영역을 살짝 넓혀 로고 가장자리가 남지 않게 한다
 

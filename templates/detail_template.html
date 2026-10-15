@@ -50,7 +50,7 @@
   .strip{background:var(--paper);padding-top:64px;padding-bottom:64px}
   .strip h2{margin-bottom:8px}
   .strip .sub{font-size:15.5px;color:var(--muted);margin-bottom:40px}
-  .strip .row{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:36px}
+  .strip .row{display:grid;grid-template-columns:repeat(3,1fr);gap:36px}
   .strip .cell{border-top:1px solid var(--line-dark);padding-top:18px}
   .strip .cell .v{font-size:40px;font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:10px;height:40px;display:flex;align-items:flex-end}
   .strip .cell .v.txt{font-size:34px}
@@ -164,6 +164,7 @@
   - 섹션은 반드시 .page 바로 아래 <section> 으로 둔다. html_to_images.py 가 이 경계에서 이미지를 자른다
   - 상품에 맞지 않는 섹션은 통째로 지운다. 지우면 rhead 번호(01, 02 …)를 다시 매긴다
   - [대괄호] 안은 전부 바꿀 자리다
+  - 이 템플릿은 의류 기준이다. 용품이면 각 섹션 주석의 「자료 없을 때」 처리법을 따른다
 -->
 <div class="page">
 
@@ -178,12 +179,12 @@
       <div class="specline num">
         <div><b>[핵심 특징 1]</b>[짧은 설명]</div>
         <div><b>[핵심 특징 2]</b>[짧은 설명]</div>
-        <div><b>[S – XL]</b>[남녀 공용 N색]</div>
+        <div><b>[S – XL]</b>[남녀 공용 N색]</div>  <!-- 용품이면: [크기·용량] / [무게] 등 상품의 대표 숫자로 바꾼다 -->
       </div>
     </div>
   </section>
 
-  <!-- SPEC STRIP -->
+  <!-- SPEC STRIP — 칸은 3개 고정. 카피가 4개 오면 하나를 고르거나 다른 섹션으로 옮긴다 -->
   <section class="strip">
     <div class="rhead"><span class="no">01</span><span class="lb">[Key Points]</span></div>
     <h2>[스펙 섹션 제목]</h2>
@@ -207,7 +208,7 @@
     </div>
   </section>
 
-  <!-- FABRIC -->
+  <!-- FABRIC — 자료 없을 때: 원단 사진·중량이 없거나 용품이면 섹션째 지운다. 소재만 알면 band 3칸 중 아는 칸만 남긴다 -->
   <section class="fabric">
     <div class="rhead"><span class="no">02</span><span class="lb">Fabric</span></div>
     <div class="split">
@@ -226,7 +227,7 @@
     </div>
   </section>
 
-  <!-- DETAILS -->
+  <!-- DETAILS — 행은 3개 기준. 4개 이상이면 이 section을 둘로 나눈다(한 섹션 = 이미지 한 장이라 모바일에서 너무 길어진다) -->
   <section class="feat">
     <div class="rhead"><span class="no">03</span><span class="lb">Details</span></div>
 
@@ -264,7 +265,7 @@
     </div>
   </section>
 
-  <!-- MOTION -->
+  <!-- MOTION — 자료 없을 때: 사용 장면 사진이 없으면 섹션째 지운다 -->
   <section class="motion">
     <div class="rhead"><span class="no">04</span><span class="lb">In Use</span></div>
     <h2>[사용 장면 제목]</h2>
@@ -273,7 +274,7 @@
     <p class="cap">[캡션]</p>
   </section>
 
-  <!-- STYLE -->
+  <!-- STYLE — 자료 없을 때: 착용컷이 2~3장뿐이면 stylegrid 칸을 그 수만큼만 남긴다. 착용 개념이 없는 용품이면 섹션째 지운다 -->
   <section class="style" style="background:var(--paper)">
     <div class="rhead"><span class="no">05</span><span class="lb">Styling</span></div>
     <h2>[스타일링 제목]</h2>
@@ -287,7 +288,7 @@
     <p class="cap2">일부 이미지는 연출 컷입니다</p>
   </section>
 
-  <!-- COLOR -->
+  <!-- COLOR — 1색이면: grid 칸을 1개로 줄이고 제목을 「컬러」로, list는 칩 1개. 2색이면 2칸 -->
   <section class="color">
     <div class="rhead"><span class="no">06</span><span class="lb">Color</span></div>
     <h2>[N가지 컬러]</h2>
@@ -305,7 +306,7 @@
     </div>
   </section>
 
-  <!-- SIZE -->
+  <!-- SIZE — 의류 기준 열(가슴둘레·총장·소매)이다. 용품이면 열을 [가로·세로·높이·무게] 등으로 바꾸고, 실측이 없으면 [추천 키·몸무게] 2열 표만 둔다. 사이즈 개념이 없으면 섹션째 지운다 -->
   <section class="size">
     <div class="rhead"><span class="no">07</span><span class="lb">Size Guide</span></div>
     <h2>사이즈 안내</h2>

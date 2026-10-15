@@ -9,9 +9,15 @@
 """
 
 import argparse
+import re
+import sys
 from pathlib import Path
 
 import requests
+
+# 윈도우 한글 콘솔(cp949)에서 도움말·진행 메시지가 깨지거나 멈추지 않게 UTF-8로 출력한다
+sys.stdout.reconfigure(encoding="utf-8")
+sys.stderr.reconfigure(encoding="utf-8")
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
@@ -32,8 +38,8 @@ def main():
 
     ok = 0
     for i, url in enumerate(urls, 1):
-        # 알리 CDN은 파일명 끝에 리사이즈 접미사가 붙는다 — 원본을 받으려면 떼어낸다
-        clean = url.split("?")[0]
+        # 알리 CDN은 파일명 끝에 리사이즈 접미사(.jpg_.webp, .jpg_100x100.jpg 등)가 붙는다 — 원본을 받으려면 떼어낸다
+        clean = re.sub(r"(\.(?:jpe?g|png|gif))_.*$", r"\1", url.split("?")[0], flags=re.I)
         ext = "gif" if clean.endswith(".gif") else "jpg"
         # 파일명에 원본 해시 앞부분을 남겨 나중에 원본과 대조하기 쉽게 한다
         stem = clean.rsplit("/", 1)[-1][:12]

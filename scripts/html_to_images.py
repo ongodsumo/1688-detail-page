@@ -9,10 +9,15 @@
 """
 
 import argparse
+import sys
 from pathlib import Path
 
 from PIL import Image
 from playwright.sync_api import sync_playwright
+
+# 윈도우 한글 콘솔(cp949)에서 도움말·진행 메시지가 깨지거나 멈추지 않게 UTF-8로 출력한다
+sys.stdout.reconfigure(encoding="utf-8")
+sys.stderr.reconfigure(encoding="utf-8")
 
 # (렌더링 뷰포트 폭, 저장 폭). 모바일은 좁게 렌더링해 CSS가 1열로 접히게 한 뒤
 # 네이버 모바일 권장 폭으로 키운다 — 860px를 축소하면 글자만 작아져 안 읽힌다.
