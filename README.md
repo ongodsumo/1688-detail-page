@@ -30,15 +30,15 @@
 터미널(윈도우: PowerShell / 맥: 터미널)에서 두 줄을 실행합니다.
 
 ```bash
-claude plugin marketplace add junmoham/1688-detail-page
-claude plugin install detail-page-1688@onggatsumo
+claude plugin marketplace add ongodsumo/1688-detail-page
+claude plugin install detail-page-1688@ongodsumo
 ```
 
 Claude Code 대화창에서 할 수도 있습니다.
 
 ```
-/plugin marketplace add junmoham/1688-detail-page
-/plugin install detail-page-1688@onggatsumo
+/plugin marketplace add ongodsumo/1688-detail-page
+/plugin install detail-page-1688@ongodsumo
 ```
 
 설치 후 **Claude Code를 껐다 켜거나 새 세션을 엽니다.**
@@ -112,9 +112,9 @@ python -m playwright install chromium
 ## 업데이트 · 삭제
 
 ```bash
-claude plugin marketplace update onggatsumo
-claude plugin update detail-page-1688@onggatsumo
-claude plugin uninstall detail-page-1688@onggatsumo
+claude plugin marketplace update ongodsumo
+claude plugin update detail-page-1688@ongodsumo
+claude plugin uninstall detail-page-1688@ongodsumo
 ```
 
 ---
